@@ -78,11 +78,31 @@ module.exports = {
     }),
 
     // 获取字符串长度，中文等于两个字节，英文等于一个
-    getLength: function getLength(str) {
+    getLength: function (str) {
         if (str == null) return 0;
         if (typeof str != "string") {
             str += "";
         }
         return str.replace(/[^\x00-\xff]/g, "01").length;
+    },
+    //时间格式化
+    dateFormat: function (date = new Date(), format) {
+        var o = {
+            "M+": date.getMonth() + 1, //month
+            "d+": date.getDate(), //day
+            "h+": date.getHours(), //hour
+            "m+": date.getMinutes(), //minute
+            "s+": date.getSeconds(), //second
+            "q+": Math.floor((date.getMonth() + 3) / 3), //quarter
+            "S": date.getMilliseconds() //millisecond
+        }
+        if (/(y+)/.test(format)) format = format.replace(RegExp.$1,
+            (date.getFullYear() + "").substr(4 - RegExp.$1.length));
+        for (var k in o) if (new RegExp("(" + k + ")").test(format))
+            format = format.replace(RegExp.$1,
+                RegExp.$1.length == 1 ? o[k] :
+                    ("00" + o[k]).substr(("" + o[k]).length));
+        return format;
     }
+
 };
